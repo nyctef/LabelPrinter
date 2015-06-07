@@ -1,0 +1,10 @@
+*.swp
+obj
+bin
+*.suo
+*.user
+*_NCrunch*
+*.sln.ide
+packages
+local.config
+.vs
