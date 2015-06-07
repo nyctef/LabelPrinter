@@ -12,7 +12,7 @@ namespace LabelPrinting
 {
     public class PrintLabel
     {
-        public static void PrintText(string title, string text, List<string> imageUrls)
+        public static void Print(string title, string text, List<string> imageUrls)
         {
             var document = new PrintDocument();
             document.DefaultPageSettings = new PageSettings
