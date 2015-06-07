@@ -12,7 +12,7 @@ namespace LabelPrinting
 {
     public class PrintLabel
     {
-        public static void PrintText(string text)
+        public static void PrintText(string title, string text, List<string> imageUrls)
         {
             var document = new PrintDocument();
             document.DefaultPageSettings = new PageSettings
@@ -32,9 +32,7 @@ namespace LabelPrinting
             };
 
             document.DefaultPageSettings.PaperSize = document.PrinterSettings.PaperSizes.Cast<PaperSize>().Where(x => x.PaperName == "62mm x 100mm").Single();
-            //document.DefaultPageSettings.PaperSize = new PaperSize("custom label", mmToHundredthsOfInches(60), mmToHundredthsOfInches(60));
-
-            var images = GetImages();
+            //document.DefaultPageSettings.PaperSize = new PaperSize("custom label", mmToHundredthsOfInches(60), mmToHundredthsOfInches(60));;
 
             document.PrintPage += (sender, args) =>
             {
@@ -46,11 +44,11 @@ namespace LabelPrinting
                 var iconsArea = new Rectangle(new Point(iconsLeft, printableArea.Top), new Size(80, printableArea.Height));
                 var stringFormat = new StringFormat(StringFormatFlags.LineLimit);
                 stringFormat.Trimming = StringTrimming.EllipsisCharacter;
+                args.Graphics.DrawString(title, new Font("Arial Black", 12), Brushes.Black, titleArea, stringFormat);
                 args.Graphics.DrawString(text, new Font("Arial", 10), Brushes.Black, textArea, stringFormat);
-                args.Graphics.DrawString(text, new Font("Arial Black", 12), Brushes.Black, titleArea, stringFormat);
                 int iconOffset = 0;
                 var iconSize = new Size(70, 70);
-                foreach (var image in images)
+                foreach (var image in imageUrls.Select(GetImage))
                 {
                     args.Graphics.DrawImage(image, new Rectangle(new Point(iconsArea.Left, iconsArea.Top + iconOffset), iconSize));
                     iconOffset += 85;
@@ -58,16 +56,6 @@ namespace LabelPrinting
                 args.HasMorePages = false;
             };
             document.Print();
-        }
-
-        private static List<Image> GetImages()
-        {
-            var result = new List<Image>();
-
-            result.Add(GetImage("https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png"));
-            result.Add(GetImage("https://s.gravatar.com/avatar/6e631016bde0b5f8a77b4be683242964?s=80"));
-
-            return result;
         }
 
         private static Image GetImage(string url)
