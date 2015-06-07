@@ -37,10 +37,10 @@ namespace LabelPrinting
             document.PrintPage += (sender, args) =>
             {
                 var printableArea = args.MarginBounds;
-                var textWidth = printableArea.Width - 90;
+                var textWidth = printableArea.Width - 95;
                 var titleArea = new Rectangle(printableArea.Location, new Size(textWidth, 80));
                 var textArea = new Rectangle(new Point(printableArea.X, printableArea.Y+80), new Size(textWidth, printableArea.Height - 90));
-                var iconsLeft = printableArea.Right - 90;
+                var iconsLeft = printableArea.Right - 95;
                 var iconsArea = new Rectangle(new Point(iconsLeft, printableArea.Top), new Size(80, printableArea.Height));
                 var stringFormat = new StringFormat(StringFormatFlags.LineLimit);
                 stringFormat.Trimming = StringTrimming.EllipsisCharacter;
@@ -51,7 +51,7 @@ namespace LabelPrinting
                 foreach (var image in imageUrls.Select(GetImage))
                 {
                     args.Graphics.DrawImage(image, new Rectangle(new Point(iconsArea.Left, iconsArea.Top + iconOffset), iconSize));
-                    iconOffset += 85;
+                    iconOffset += 75;
                 }
                 args.HasMorePages = false;
             };
