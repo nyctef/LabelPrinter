@@ -26,6 +26,8 @@ namespace LabelPrintingHost
                 }
             );
 
+            config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
+
             appBuilder.UseWebApi(config);
         }
     }
