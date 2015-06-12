@@ -31,10 +31,24 @@ namespace LabelPrintingHost
             };
         }
 
-        public string Post([FromBody] ThingToPrint value)
+        public async Task<HttpResponseMessage> Post()
         {
-            PrintLabel.Print(value.title, value.text, value.images);
-            return "Printing ...";
+            try
+            {
+                var str = await Request.Content.ReadAsStringAsync();
+
+                var value = System.Web.Helpers.Json.Decode(str);
+                string title = value.title;
+                string text = value.text;
+                List<string> images = ((object[])value.images).Cast<string>().ToList();
+                PrintLabel.Print(title, text, images);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                throw;
+            }
+            return PlainText("Printing ...");
         }
     }
 }
