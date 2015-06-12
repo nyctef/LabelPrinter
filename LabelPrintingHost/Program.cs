@@ -12,7 +12,7 @@ namespace LabelPrintingHost
     {
         static void Main(string[] args)
         {
-            string baseAddress = "http://localhost:9000/";
+            string baseAddress = "http://*:9000";
 
             // Start OWIN host 
             using (WebApp.Start<Startup>(url: baseAddress))
@@ -20,7 +20,7 @@ namespace LabelPrintingHost
                 // Create HttpCient and make a request to api/values 
                 HttpClient client = new HttpClient();
 
-                var response = client.GetAsync(baseAddress).Result;
+                var response = client.GetAsync(baseAddress.Replace("*", "localhost")).Result;
 
                 Console.WriteLine(response.Content.ReadAsStringAsync().Result);
 
