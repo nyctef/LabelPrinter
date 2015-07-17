@@ -21,5 +21,15 @@ namespace Tests
                     "https://s.gravatar.com/avatar/cc940654ab4278a55f6deb9bad4b687a?s=80"
                 });
         }
+
+        [Test, Explicit]
+        public void PrintTestPageWithTitleOnly()
+        {
+            PrintLabel.Print("Engine#273: Run existing SQL Server tests against SQL Server 2016 test server",
+                new List<string>
+                { "https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png",
+                    "https://s.gravatar.com/avatar/cc940654ab4278a55f6deb9bad4b687a?s=80"
+                });
+        }
     }
 }

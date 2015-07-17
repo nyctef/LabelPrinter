@@ -40,8 +40,15 @@ namespace LabelPrintingHost
                 var value = System.Web.Helpers.Json.Decode(str);
                 string title = value.title;
                 string text = value.text;
-                List<string> images = ((object[])value.images).Cast<string>().ToList();
-                PrintLabel.Print(title, text, images);
+                List<string> images = ((object[])value.images).Cast<string>().ToList() ?? new List<string>();
+                if (text != null)
+                {
+                    PrintLabel.Print(title, text, images);
+                }
+                else
+                {
+                    PrintLabel.Print(title, images);
+                }
             }
             catch (Exception e)
             {

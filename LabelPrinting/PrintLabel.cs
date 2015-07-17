@@ -28,7 +28,7 @@ namespace LabelPrinting
                 PrinterName = "Brother QL-570",
                 //PrinterName = "Microsoft XPS Document Writer",
                 //PrintToFile = true,
-                //PrintFileName = @"C:\Users\mark\Desktop\temp\test.xps",
+                //PrintFileName = @"C:\Users\mark.jordan.red-gate\Desktop\temp\test.xps",
             };
 
             document.DefaultPageSettings.PaperSize = document.PrinterSettings.PaperSizes.Cast<PaperSize>().Where(x => x.PaperName == "62mm x 100mm").Single();
@@ -51,6 +51,50 @@ namespace LabelPrinting
                 foreach (var image in imageUrls.Select(GetImage))
                 {
                     args.Graphics.DrawImage(image, new Rectangle(new Point(iconsArea.Left, iconsArea.Top + iconOffset), iconSize));
+                    iconOffset += 75;
+                }
+                args.HasMorePages = false;
+            };
+            document.Print();
+        }
+
+        public static void Print(string title, List<string> imageUrls)
+        {
+            var document = new PrintDocument();
+            document.DefaultPageSettings = new PageSettings
+            {
+                Margins = new Margins(mmToHundredthsOfInches(1.2), mmToHundredthsOfInches(1), mmToHundredthsOfInches(1), mmToHundredthsOfInches(1)),
+                Landscape = true,
+            };
+            document.PrinterSettings = new PrinterSettings
+            {
+                PrintRange = PrintRange.SomePages,
+                FromPage = 0,
+                ToPage = 0,
+                PrinterName = "Brother QL-570",
+                //PrinterName = "Microsoft XPS Document Writer",
+                //PrintToFile = true,
+                //PrintFileName = @"C:\Users\mark.jordan.red-gate\Desktop\temp\test.xps",
+            };
+
+            document.DefaultPageSettings.PaperSize = document.PrinterSettings.PaperSizes.Cast<PaperSize>().Where(x => x.PaperName == "62mm x 100mm").Single();
+            //document.DefaultPageSettings.PaperSize = new PaperSize("custom label", mmToHundredthsOfInches(60), mmToHundredthsOfInches(60));;;
+
+            document.PrintPage += (sender, args) =>
+            {
+                var printableArea = args.MarginBounds;
+                var titleArea = new Rectangle(new Point(printableArea.Left, printableArea.Top+80), new Size(printableArea.Width, printableArea.Height-80));
+                var iconsArea = new Rectangle(printableArea.Location, new Size(printableArea.Width, 80));
+
+                var stringFormat = new StringFormat(StringFormatFlags.LineLimit);
+                stringFormat.Trimming = StringTrimming.EllipsisCharacter;
+
+                args.Graphics.DrawString(title, new Font("Arial Black", 24), Brushes.Black, titleArea, stringFormat);
+                int iconOffset = 0;
+                var iconSize = new Size(70, 70);
+                foreach (var image in imageUrls.Select(GetImage))
+                {
+                    args.Graphics.DrawImage(image, new Rectangle(new Point(iconsArea.Left + iconOffset, iconsArea.Top), iconSize));
                     iconOffset += 75;
                 }
                 args.HasMorePages = false;
